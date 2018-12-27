@@ -3,8 +3,12 @@
     <div class="user-info">
       <div class="container">
         <div class="row">
-          <div class="col-xs-12 col-md-10 offset-md-1">
-            <img :src="profile.image" class="user-img" alt="@/assets/images/smiley-cyrus.jpg">
+          <div v-if="loading" class="col-xs-12 col-md-10 offset-md-1">
+            <br>
+            <h5>Loading ...</h5>
+          </div>
+          <div v-else class="col-xs-12 col-md-10 offset-md-1">
+            <img :src="profile.image" class="user-img" alt>
             <h4>{{profile.username}}</h4>
             <p>{{profile.bio}}</p>
 
@@ -19,7 +23,7 @@
             </button>
             
             <button
-              v-if="username && (!profile.following)"
+              v-else-if="username && (!profile.following)"
               class="btn btn-sm btn-outline-secondary action-btn"
               @click="toFollow"
             >
@@ -29,7 +33,7 @@
             </button>
             
             <button
-              v-if="username && profile.following"
+              v-else-if="username && profile.following"
               class="btn btn-sm btn-outline-secondary action-btn"
               @click="toUnfollow"
             >
@@ -42,7 +46,7 @@
       </div>
     </div>
 
-    <div class="container">
+    <div v-if="!loading" class="container">
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
           <div class="articles-toggle">
@@ -88,22 +92,22 @@ import ArticlePreview from "@/components/ArticlePreview.vue";
 export default {
   async created() {
     try {
+      this.loading = true;
       let name = this.$route.params.username;
       name = name.slice(1);
-      //removed @ from starting of name
       let profileData = await this.$store.dispatch("users/getProfile", name);
-      //set User Profile
-      this.profile = profileData;
-      // favoritedArticle
+      this.profile = { ...profileData };
+      this.loading = false;
       this.favoritedArticle = await this.$store.dispatch(
         "articles/getGlobalArticle",
         { favorited: name }
       );
-      //myArticle
       this.myArticle = await this.$store.dispatch("articles/getGlobalArticle", {
         author: name
       });
+
       this.username = this.$store.getters["users/username"];
+      this.loading = false;
     } catch (e) {
       console.log(e.messaage);
     }
@@ -114,6 +118,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       username: null,
       articleView: "myArticle",
       favoritedArticle: null,
@@ -137,11 +142,6 @@ export default {
     toSetting() {
       this.$router.replace("/setting");
     }
-  },
-  computed: {
-    // isFollowing(){
-    //   return this.profile.following;
-    // }
   }
 };
 </script>

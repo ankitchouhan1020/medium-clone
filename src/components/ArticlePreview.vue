@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     viewArticle() {
-      this.$router.replace({ path: `/article/${this.article.slug}` });
+      this.$router.replace(`/article/${this.article.slug}`);
     }
   }
 };
