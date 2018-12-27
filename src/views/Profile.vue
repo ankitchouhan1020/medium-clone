@@ -19,7 +19,7 @@
             </button>
             
             <button
-              v-else-if="username !== null && !profile.following"
+              v-if="username && (!profile.following)"
               class="btn btn-sm btn-outline-secondary action-btn"
               @click="toFollow"
             >
@@ -29,11 +29,11 @@
             </button>
             
             <button
-              v-else-if="username !== null && profile.following"
+              v-if="username && profile.following"
               class="btn btn-sm btn-outline-secondary action-btn"
               @click="toUnfollow"
             >
-              <i class="ion-plus-round"></i>
+              <i class="ion-minus-round"></i>
               &nbsp;
               Unfollow {{profile.username}}
             </button>
@@ -123,14 +123,25 @@ export default {
   },
   methods: {
     toFollow: async function() {
-      await this.$store.dispatch("users/followUser", this.profile.username);
+      this.profile = await this.$store.dispatch(
+        "users/followUser",
+        this.profile.username
+      );
     },
     toUnfollow: async function() {
-      await this.$store.dispatch("users/followUser", this.profile.username);
+      this.profile = await this.$store.dispatch(
+        "users/unfollowUser",
+        this.profile.username
+      );
     },
     toSetting() {
       this.$router.replace("/setting");
     }
+  },
+  computed: {
+    // isFollowing(){
+    //   return this.profile.following;
+    // }
   }
 };
 </script>

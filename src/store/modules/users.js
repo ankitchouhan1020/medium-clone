@@ -92,7 +92,8 @@ export default {
     followUser: async function ({ commit }, username) {
       try {
         const response = await api.post(`/profiles/${username}/follow`);
-        console.log(response);
+        return response.data.profile;
+        //console.log(response);
       } catch (e) {
         console.log(e.message);
         throw e;
@@ -101,7 +102,7 @@ export default {
     unfollowUser: async function ({ commit }, username) {
       try {
         const response = await api.delete(`/profiles/${username}/follow`);
-        console.log(response);
+        return response.data.profile;
       } catch (e) {
         console.log(e.message);
         throw e;

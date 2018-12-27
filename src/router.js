@@ -7,10 +7,11 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: "/",
+      path: "*",
       name: "home",
       component: Home
     },
+
     {
       path: "/login",
       name: "login",
@@ -25,6 +26,11 @@ export default new Router({
       path: "/editor",
       name: "editor_new",
       component: () => import("@/views/ArticleCreate.vue")
+    },
+    {
+      path: "/article/:article-slug",
+      name: "articleView",
+      component: () => import("@/views/Article.vue")
     },
     {
       path: "/editor/:article-slug",
