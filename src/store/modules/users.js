@@ -25,11 +25,11 @@ export default {
     }
   },
   actions: {
-    getUser: async function({ commit }) {
+    getUser: async function ({ commit }) {
       const user = await api.get("/user");
       commit("setUser", user);
     },
-    loginUser: async function({ commit }, { email, password }) {
+    loginUser: async function ({ commit }, { email, password }) {
       try {
         var response = await api.post("/users/login", {
           user: {
@@ -46,7 +46,7 @@ export default {
         throw e;
       }
     },
-    registerUser: async function({ commit }, { username, email, password }) {
+    registerUser: async function ({ commit }, { username, email, password }) {
       try {
         const response = await api.post("/users", {
           user: {
@@ -64,12 +64,12 @@ export default {
         throw e;
       }
     },
-    logoutUser: function({ commit }) {
+    logoutUser: function ({ commit }) {
       clearToken();
       commit("setUser", null);
       commit("setProfile", null);
     },
-    getProfile: async function({ commit, state }, username) {
+    getProfile: async function ({ commit, state }, username) {
       try {
         const response = await api.get(`/profiles/${username}`);
         if (state.user && state.user.username === username) {
@@ -81,7 +81,7 @@ export default {
         throw e;
       }
     },
-    updateProfile: async function({ commit }, value) {
+    updateProfile: async function ({ commit }, value) {
       try {
         await api.put("/user", value.payload);
       } catch (e) {
@@ -89,7 +89,7 @@ export default {
         throw e;
       }
     },
-    followUser: async function({ commit }, username) {
+    followUser: async function ({ commit }, username) {
       try {
         const response = await api.post(`/profiles/${username}/follow`);
         console.log(response);
@@ -98,7 +98,7 @@ export default {
         throw e;
       }
     },
-    unfollowUser: async function({ commit }, username) {
+    unfollowUser: async function ({ commit }, username) {
       try {
         const response = await api.delete(`/profiles/${username}/follow`);
         console.log(response);
