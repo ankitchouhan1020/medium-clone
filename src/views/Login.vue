@@ -7,6 +7,7 @@
           <p class="text-xs-center">
             <router-link to="/register">Need an account?</router-link>
           </p>
+          <p v-if="loading" class="text-xs-center info">Signing in...</p>
 
           <ul class="error-messages">
             <li :key="error.message" v-for="error in errors">{{ error.message }}</li>
@@ -42,22 +43,31 @@
 export default {
   data() {
     return {
+      loading: false,
+
       email: "",
       password: "",
       errors: []
     };
   },
   methods: {
-    login() {
+    async login() {
       this.errors = [];
       try {
-        this.$store.dispatch("users/loginUser", {
+        this.loading = true;
+
+        await this.$store.dispatch("users/loginUser", {
           email: this.email,
           password: this.password
         });
-        this.$router.replace("/");
+        var vm = this;
+        setTimeout(function() {
+          vm.$router.replace("/");
+        }, 500);
+        this.loading = false;
       } catch (e) {
-        this.errors.push(e.message);
+        this.loading = false;
+        this.errors.push(e);
         throw e;
       }
     }

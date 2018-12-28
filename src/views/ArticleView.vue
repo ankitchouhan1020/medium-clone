@@ -16,7 +16,26 @@
             <span class="date">{{formattedDate}}</span>
           </div>
           <button
-            v-if="!(profile.following)"
+            v-if="username === article.author.username"
+            class="btn btn-sm btn-outline-secondary"
+            @click="toEditArticle"
+          >
+            <i class="ion-edit"></i>
+            &nbsp;
+            Edit Article
+          </button>
+          &nbsp;&nbsp;
+          <button
+            v-if="username === article.author.username"
+            class="btn btn-outline-danger btn-sm"
+            @click="toDeleteArticle(article.slug)"
+          >
+            <i class="ion-trash-a"></i>
+            &nbsp;
+            Delete Article
+          </button>
+          <button
+            v-if="!(username === article.author.username) && !(profile.following)"
             class="btn btn-sm btn-outline-secondary"
             @click="toFollow"
           >
@@ -24,8 +43,9 @@
             &nbsp;
             Follow {{article.author.username}}
           </button>
+          
           <button
-            v-if="(profile.following)"
+            v-if="!(username === article.author.username) && (profile.following)"
             class="btn btn-sm btn-outline-secondary"
             @click="toUnfollow"
           >
@@ -35,6 +55,7 @@
           </button>
           &nbsp;&nbsp;
           <button
+            v-if="!(username === article.author.username)"
             class="btn btn-sm btn-outline-primary"
             @click="setFavArticle"
             :class="article.favorited ? 'active' : ''"
@@ -73,7 +94,7 @@
 
       <div class="article-actions">
         <div class="article-meta">
-          <a href="profile.html">
+          <a href="#">
             <img :src="article.author.image">
           </a>
           <div class="info">
@@ -82,7 +103,26 @@
           </div>
 
           <button
-            v-if="!(profile.following)"
+            v-if="username === article.author.username"
+            class="btn btn-sm btn-outline-secondary"
+            @click="toEditArticle"
+          >
+            <i class="ion-edit"></i>
+            &nbsp;
+            Edit Article
+          </button>
+          &nbsp;&nbsp;
+          <button
+            v-if="username === article.author.username"
+            class="btn btn-outline-danger btn-sm"
+            @click="toDeleteArticle(article.slug)"
+          >
+            <i class="ion-trash-a"></i>
+            &nbsp;
+            Delete Article
+          </button>
+          <button
+            v-if="!(username === article.author.username) && !(profile.following)"
             class="btn btn-sm btn-outline-secondary"
             @click="toFollow"
           >
@@ -90,8 +130,9 @@
             &nbsp;
             Follow {{article.author.username}}
           </button>
+          
           <button
-            v-if="(profile.following)"
+            v-if="!(username === article.author.username) && (profile.following)"
             class="btn btn-sm btn-outline-secondary"
             @click="toUnfollow"
           >
@@ -99,8 +140,9 @@
             &nbsp;
             Unfollow {{article.author.username}}
           </button>
-          &nbsp;
+          &nbsp;&nbsp;
           <button
+            v-if="!(username === article.author.username)"
             class="btn btn-sm btn-outline-primary"
             @click="setFavArticle"
             :class="article.favorited ? 'active' : ''"
@@ -170,7 +212,8 @@
 
 
 <script>
-import moment from "moment";
+import moment, { relativeTimeRounding } from "moment";
+import { api } from "./../store/api";
 export default {
   async created() {
     this.loading = true;
@@ -199,6 +242,9 @@ export default {
     },
     user() {
       return this.$store.getters["users/user"];
+    },
+    username() {
+      return this.$store.getters["users/username"];
     }
   },
   methods: {
@@ -245,6 +291,21 @@ export default {
         "users/unfollowUser",
         this.article.author.username
       );
+    },
+    async toDeleteArticle(slug) {
+      try {
+        await api.delete(`/articles/${slug}`);
+        this.$router.push(`/@${this.username}`);
+      } catch (e) {
+        throw e;
+      }
+    },
+    toEditArticle() {
+      try {
+        this.$router.push(`/editor/${this.article.slug}`);
+      } catch (e) {
+        throw e;
+      }
     }
   }
 };
