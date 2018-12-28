@@ -15,58 +15,61 @@
             <a href class="author">{{article.author.username}}</a>
             <span class="date">{{formattedDate}}</span>
           </div>
-          <button
-            v-if="username === article.author.username"
-            class="btn btn-sm btn-outline-secondary"
-            @click="toEditArticle"
-          >
-            <i class="ion-edit"></i>
-            &nbsp;
-            Edit Article
-          </button>
-          &nbsp;&nbsp;
-          <button
-            v-if="username === article.author.username"
-            class="btn btn-outline-danger btn-sm"
-            @click="toDeleteArticle(article.slug)"
-          >
-            <i class="ion-trash-a"></i>
-            &nbsp;
-            Delete Article
-          </button>
-          <button
-            v-if="!(username === article.author.username) && !(profile.following)"
-            class="btn btn-sm btn-outline-secondary"
-            @click="toFollow"
-          >
-            <i class="ion-plus-round"></i>
-            &nbsp;
-            Follow {{article.author.username}}
-          </button>
-          
-          <button
-            v-if="!(username === article.author.username) && (profile.following)"
-            class="btn btn-sm btn-outline-secondary"
-            @click="toUnfollow"
-          >
-            <i class="ion-minus-round"></i>
-            &nbsp;
-            Unfollow {{article.author.username}}
-          </button>
-          &nbsp;&nbsp;
-          <button
-            v-if="!(username === article.author.username)"
-            class="btn btn-sm btn-outline-primary"
-            @click="setFavArticle"
-            :class="article.favorited ? 'active' : ''"
-          >
-            <i class="ion-heart"></i>
-            &nbsp;
-            Favorite Post
-            <span
-              class="counter"
-            >({{article.favoritesCount}})</span>
-          </button>
+          <template v-if="username === article.author.username">
+            <button
+              v-if="username === article.author.username"
+              class="btn btn-sm btn-outline-secondary"
+              @click="toEditArticle"
+            >
+              <i class="ion-edit"></i>
+              &nbsp;
+              Edit Article
+            </button>
+            &nbsp;&nbsp;
+            <button
+              class="btn btn-outline-danger btn-sm"
+              @click="toDeleteArticle(article.slug)"
+            >
+              <i class="ion-trash-a"></i>
+              &nbsp;
+              Delete Article
+            </button>
+          </template>
+
+          <template v-else>
+            <button
+              v-if="!profile.following"
+              class="btn btn-sm btn-outline-secondary"
+              @click="toFollow"
+            >
+              <i class="ion-plus-round"></i>
+              &nbsp;
+              Follow {{article.author.username}}
+            </button>
+            
+            <button
+              v-if="profile.following"
+              class="btn btn-sm btn-outline-secondary"
+              @click="toUnfollow"
+            >
+              <i class="ion-minus-round"></i>
+              &nbsp;
+              Unfollow {{article.author.username}}
+            </button>
+            &nbsp;&nbsp;
+            <button
+              class="btn btn-sm btn-outline-primary"
+              @click="setFavArticle"
+              :class="article.favorited ? 'active' : ''"
+            >
+              <i class="ion-heart"></i>
+              &nbsp;
+              Favorite Post
+              <span
+                class="counter"
+              >({{article.favoritesCount}})</span>
+            </button>
+          </template>
         </div>
       </div>
     </div>
@@ -102,108 +105,92 @@
             <span class="date">{{formattedDate}}</span>
           </div>
 
-          <button
-            v-if="username === article.author.username"
-            class="btn btn-sm btn-outline-secondary"
-            @click="toEditArticle"
-          >
-            <i class="ion-edit"></i>
-            &nbsp;
-            Edit Article
-          </button>
-          &nbsp;&nbsp;
-          <button
-            v-if="username === article.author.username"
-            class="btn btn-outline-danger btn-sm"
-            @click="toDeleteArticle(article.slug)"
-          >
-            <i class="ion-trash-a"></i>
-            &nbsp;
-            Delete Article
-          </button>
-          <button
-            v-if="!(username === article.author.username) && !(profile.following)"
-            class="btn btn-sm btn-outline-secondary"
-            @click="toFollow"
-          >
-            <i class="ion-plus-round"></i>
-            &nbsp;
-            Follow {{article.author.username}}
-          </button>
-          
-          <button
-            v-if="!(username === article.author.username) && (profile.following)"
-            class="btn btn-sm btn-outline-secondary"
-            @click="toUnfollow"
-          >
-            <i class="ion-minus-round"></i>
-            &nbsp;
-            Unfollow {{article.author.username}}
-          </button>
-          &nbsp;&nbsp;
-          <button
-            v-if="!(username === article.author.username)"
-            class="btn btn-sm btn-outline-primary"
-            @click="setFavArticle"
-            :class="article.favorited ? 'active' : ''"
-          >
-            <i class="ion-heart"></i>
-            &nbsp;
-            Favorite Post
-            <span
-              class="counter"
-            >({{article.favoritesCount}})</span>
-          </button>
+          <template v-if="username === article.author.username">
+            <button
+              v-if="username === article.author.username"
+              class="btn btn-sm btn-outline-secondary"
+              @click="toEditArticle"
+            >
+              <i class="ion-edit"></i>
+              &nbsp;
+              Edit Article
+            </button>
+            &nbsp;&nbsp;
+            <button
+              class="btn btn-outline-danger btn-sm"
+              @click="toDeleteArticle(article.slug)"
+            >
+              <i class="ion-trash-a"></i>
+              &nbsp;
+              Delete Article
+            </button>
+          </template>
+
+          <template v-else>
+            <button
+              v-if="!profile.following"
+              class="btn btn-sm btn-outline-secondary"
+              @click="toFollow"
+            >
+              <i class="ion-plus-round"></i>
+              &nbsp;
+              Follow {{article.author.username}}
+            </button>
+            
+            <button
+              v-if="profile.following"
+              class="btn btn-sm btn-outline-secondary"
+              @click="toUnfollow"
+            >
+              <i class="ion-minus-round"></i>
+              &nbsp;
+              Unfollow {{article.author.username}}
+            </button>
+            &nbsp;&nbsp;
+            <button
+              class="btn btn-sm btn-outline-primary"
+              @click="setFavArticle"
+              :class="article.favorited ? 'active' : ''"
+            >
+              <i class="ion-heart"></i>
+              &nbsp;
+              Favorite Post
+              <span
+                class="counter"
+              >({{article.favoritesCount}})</span>
+            </button>
+          </template>
         </div>
       </div>
 
       <div class="row">
         <div class="col-xs-12 col-md-8 offset-md-2">
-          <form class="card comment-form">
+          <form v-if="user" class="card comment-form">
             <div class="card-block">
-              <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+              <textarea
+                class="form-control"
+                placeholder="Write a comment..."
+                rows="3"
+                v-model="newCommentData"
+              ></textarea>
             </div>
             <div class="card-footer">
-              <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img">
-              <button class="btn btn-sm btn-primary">Post Comment</button>
+              <img :src="loggedUserProfile.image" class="comment-author-img">
+              <button class="btn btn-sm btn-primary" @click.prevent="postComment">Post Comment</button>
             </div>
           </form>
-
-          <div class="card">
-            <div class="card-block">
-              <p
-                class="card-text"
-              >With supporting text below as a natural lead-in to additional content.</p>
-            </div>
-            <div class="card-footer">
-              <a href class="comment-author">
-                <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img">
-              </a>
-              &nbsp;
-              <a href class="comment-author">Jacob Schmidt</a>
-              <span class="date-posted">Dec 29th</span>
-            </div>
+          <div class="col-xs-12 col-md-8 offset-md-2" style="text-align:center" v-if="user===null">
+            <router-link to="/login">Sign in</router-link>&nbsp; or&nbsp;
+            <router-link to="/register">Register</router-link>&nbsp;to add comments on this article.
           </div>
-
-          <div class="card">
-            <div class="card-block">
-              <p
-                class="card-text"
-              >With supporting text below as a natural lead-in to additional content.</p>
-            </div>
-            <div class="card-footer">
-              <a href class="comment-author">
-                <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img">
-              </a>
-              &nbsp;
-              <a href class="comment-author">Jacob Schmidt</a>
-              <span class="date-posted">Dec 29th</span>
-              <span class="mod-options">
-                <i class="ion-edit"></i>
-                <i class="ion-trash-a"></i>
-              </span>
-            </div>
-          </div>
+          <br>
+          <br>
+          <TheComment
+            v-for="comment in comments"
+            :comment="comment"
+            :key="comment.id"
+            @updateCommentList="updateComments"
+          ></TheComment>
         </div>
       </div>
     </div>
@@ -212,9 +199,13 @@
 
 
 <script>
-import moment, { relativeTimeRounding } from "moment";
+import TheComment from "@/components/TheComment.vue";
+import moment from "moment";
 import { api } from "./../store/api";
 export default {
+  components: {
+    TheComment
+  },
   async created() {
     this.loading = true;
     let article = await this.$store.dispatch(
@@ -222,18 +213,29 @@ export default {
       this.$route.params.article_slug
     );
     this.article = article;
-    this.loading = false;
+
+    this.fetchComment(article.slug);
     this.profile = await this.$store.dispatch(
       "users/getProfile",
       this.article.author.username
     );
+    if (this.$store.getters["users/user"]) {
+      this.loggedUserProfile = await this.$store.dispatch(
+        "users/getProfile",
+        this.$store.getters["users/username"]
+      );
+    }
+    this.loading = false;
   },
   name: "articleView",
   data() {
     return {
+      newCommentData: "",
+      loggedUserProfile: null,
       article: null,
       loading: false,
-      profile: null
+      profile: null,
+      comments: null
     };
   },
   computed: {
@@ -272,7 +274,6 @@ export default {
         this.$set(this.article, "favoritesCount", resarticle.favoritesCount);
         this.$set(this.article, "favorited", resarticle.favorited);
       } catch (e) {
-        console.log(e.message);
         throw e;
       }
     },
@@ -303,6 +304,29 @@ export default {
     toEditArticle() {
       try {
         this.$router.push(`/editor/${this.article.slug}`);
+      } catch (e) {
+        throw e;
+      }
+    },
+    postComment: async function() {
+      try {
+        let res = await api.post(`/articles/${this.article.slug}/comments`, {
+          comment: { body: this.newCommentData }
+        });
+        this.newCommentData = "";
+        this.fetchComment(this.article.slug);
+      } catch (e) {
+        throw e;
+      }
+    },
+    async fetchComment(slug) {
+      let response = await api.get(`/articles/${slug}/comments`);
+      this.comments = response.data.comments;
+    },
+    async updateComments(id) {
+      try {
+        await api.delete(`/articles/${this.article.slug}/comments/${id}`);
+        await this.fetchComment(this.article.slug);
       } catch (e) {
         throw e;
       }
