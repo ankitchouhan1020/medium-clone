@@ -12,7 +12,11 @@
         >{{article.author.username}}</router-link>
         <span class="date">{{formattedDate}}</span>
       </div>
-      <button class="btn btn-outline-primary btn-sm pull-xs-right">
+      <button
+        class="btn btn-outline-primary btn-sm pull-xs-right"
+        @click="setFavArticle"
+        :class="setFav ? '' : 'active'"
+      >
         <i class="ion-heart"></i>
         {{ article.favoritesCount }}
       </button>
@@ -29,6 +33,11 @@
 import moment from "moment";
 export default {
   props: ["article"],
+  data() {
+    return {
+      setFav: true
+    };
+  },
   computed: {
     formattedDate() {
       return moment(this.article.createdAt).format("MMMM Do, YYYY");
@@ -36,7 +45,46 @@ export default {
   },
   methods: {
     viewArticle() {
-      this.$router.replace(`/article/${this.article.slug}`);
+      this.$router.push({
+        //name: "articleView",
+        path: `/article/${this.article.slug}`
+        // params: { articleDes: this.article }
+      });
+    },
+    async setFavArticle() {
+      if (this.setFav) {
+        //let count = this.article.favoritesCount;
+        this.$set(
+          this.article,
+          this.article.favoritesCount,
+          this.article.favoritesCount + 1
+        );
+        try {
+          let response = await this.$store.dispatch(
+            "articles/favArticle",
+            this.article.slug
+          );
+        } catch (e) {
+          console.log(e.message);
+          throw e;
+        }
+      } else {
+        this.$set(
+          this.article,
+          this.article.favoritesCount,
+          this.article.favoritesCount - 1
+        );
+        try {
+          let response = await this.$store.dispatch(
+            "articles/unfavArticle",
+            this.article.slug
+          );
+        } catch (e) {
+          console.log(e.message);
+          throw e;
+        }
+      }
+      this.setFav === true ? (this.setFav = false) : (this.setFav = true);
     }
   }
 };

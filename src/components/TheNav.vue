@@ -17,10 +17,14 @@
           </router-link>
         </li>
         <li v-if="username===null" class="nav-item">
-          <router-link class="nav-link" to="/register">Sign Up</router-link>
+          <router-link class="nav-link" to="/register">
+            <i class="ion-compose"></i>&nbsp;Sign Up
+          </router-link>
         </li>
         <li v-if="username===null" class="nav-item">
-          <router-link class="nav-link" to="/login">Sign in</router-link>
+          <router-link class="nav-link" to="/login">
+            <i class="ion-compose"></i>&nbsp;Sign in
+          </router-link>
         </li>
         <li v-if="username" class="nav-item">
           <router-link class="nav-link" :to="`/@${username}`">{{username}}</router-link>

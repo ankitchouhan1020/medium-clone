@@ -29,7 +29,7 @@ export default {
     }
   },
   actions: {
-    getGlobalArticle: async function({ commit }, payload) {
+    getGlobalArticle: async function ({ commit }, payload) {
       let route = "/articles";
       const { tag, author, favorited, limit } = payload;
       if (tag || author || favorited || limit) {
@@ -51,13 +51,43 @@ export default {
         return;
       }
     },
-    getTagList: async function({ commit }) {
+    getTagList: async function ({ commit }) {
       const response = await api.get("/tags");
       commit("setTagList", response.data.tags);
     },
-    getFeedArticle: async function({ commit }) {
+    getFeedArticle: async function ({ commit }) {
       const feedArticle = await api.get("articles/feed");
       commit("setFeedArticle", feedArticle.data.articles);
+    },
+    favArticle: async function ({ commit }, articleSlug) {
+      try {
+        const response = await api.post(`/articles/${articleSlug}/favorite`);
+        return response.data.article;
+        //console.log(response);
+      } catch (e) {
+        console.log(e.message);
+        throw e;
+      }
+    },
+    unfavArticle: async function ({ commit }, articleSlug) {
+      try {
+        const response = await api.delete(`/articles/${articleSlug}/favorite`);
+        return response.data.article;
+        //console.log(response);
+      } catch (e) {
+        console.log(e.message);
+        throw e;
+      }
+    },
+    getSingleArticle: async function ({ commit }, slug) {
+      try {
+        let response = await api.get(`/articles/${slug}`);
+        return response.data.article;
+      } catch (e) {
+        console.log(e)
+        throw e
+      }
+
     }
   }
 };

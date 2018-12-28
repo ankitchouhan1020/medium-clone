@@ -4,10 +4,14 @@
       <div class="container">
         <h1 class="logo-font">conduit</h1>
         <p>A place to share your knowledge.</p>
+        <div v-if="loading">
+          <hr>
+          <h4 style="text-align:center">Loading...</h4>
+        </div>
       </div>
     </div>
 
-    <div class="container page">
+    <div v-if="!loading" class="container page">
       <div class="row">
         <div class="col-md-9">
           <div class="feed-toggle">
@@ -32,13 +36,13 @@
               </li>
             </ul>
           </div>
+
           <template v-if="activeClass === 'global'">
             <ArticlePreview :key="article.slug" v-for="article in articles" :article="article"></ArticlePreview>
           </template>
           <template v-if="username && (activeClass === 'feed')">
             <ArticlePreview :key="article.slug" v-for="article in feedArticles" :article="article"></ArticlePreview>
           </template>
-
           <template v-if="activeClass === 'tag'">
             <ArticlePreview :key="article.slug" v-for="article in tagArticles" :article="article"></ArticlePreview>
           </template>
@@ -47,7 +51,6 @@
         <div class="col-md-3">
           <div class="sidebar">
             <p>Popular Tags</p>
-
             <div class="tag-list">
               <a
                 href="#"
@@ -76,9 +79,19 @@ export default {
     if (this.$store.getters["articles/tagList"].length == 0)
       this.$store.dispatch("articles/getTagList");
   },
-
+  props: ["tagName"],
+  beforeRouteEnter(to, from, next) {
+    next(async vm => {
+      if (!(to.params.tagName === undefined)) {
+        //console.log(to.params.tagName);
+        await vm.getTagedArticle(to.params.tagName);
+        next();
+      }
+    });
+  },
   data() {
     return {
+      loading: false,
       activeClass: "global",
       selectedTag: "",
       tagArticles: [],

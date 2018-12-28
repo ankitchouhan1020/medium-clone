@@ -9,11 +9,13 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: Home
+      component: Home,
+      props: true
     },
     {
       path: "/login",
       name: "login",
+
       component: () => import("@/views/Login.vue")
     },
     {
@@ -27,12 +29,13 @@ export default new Router({
       component: () => import("@/views/ArticleCreate.vue")
     },
     {
-      path: '/article/:article-slug',
+      path: '/article/:article_slug',
       name: "articleView",
+      props: true,
       component: () => import("@/views/ArticleView.vue")
     },
     {
-      path: "/editor/:article-slug",
+      path: "/editor/:article_slug",
       name: "editor_edit",
       component: () => import("@/views/ArticleEdit.vue")
     },
