@@ -12,7 +12,11 @@
             <img :src="article.author.image">
           </a>
           <div class="info">
-            <a href class="author">{{article.author.username}}</a>
+            <router-link
+              href="#"
+              class="author"
+              :to="'/@' + article.author.username"
+            >{{article.author.username}}</router-link>
             <span class="date">{{formattedDate}}</span>
           </div>
           <template v-if="username === article.author.username">
