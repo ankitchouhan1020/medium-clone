@@ -63,7 +63,6 @@ export default {
       try {
         const response = await api.post(`/articles/${articleSlug}/favorite`);
         return response.data.article;
-        //console.log(response);
       } catch (e) {
         console.log(e.message);
         throw e;
@@ -82,6 +81,7 @@ export default {
     getSingleArticle: async function ({ commit }, slug) {
       try {
         let response = await api.get(`/articles/${slug}`);
+
         return response.data.article;
       } catch (e) {
         console.log(e)

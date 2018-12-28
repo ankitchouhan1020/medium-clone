@@ -15,7 +15,7 @@
       <button
         class="btn btn-outline-primary btn-sm pull-xs-right"
         @click="setFavArticle"
-        :class="setFav ? '' : 'active'"
+        :class="article.favorited ? 'active' : ''"
       >
         <i class="ion-heart"></i>
         {{ article.favoritesCount }}
@@ -34,9 +34,7 @@ import moment from "moment";
 export default {
   props: ["article"],
   data() {
-    return {
-      setFav: true
-    };
+    return {};
   },
   computed: {
     formattedDate() {
@@ -46,45 +44,33 @@ export default {
   methods: {
     viewArticle() {
       this.$router.push({
-        //name: "articleView",
         path: `/article/${this.article.slug}`
-        // params: { articleDes: this.article }
       });
     },
     async setFavArticle() {
-      if (this.setFav) {
-        //let count = this.article.favoritesCount;
-        this.$set(
-          this.article,
-          this.article.favoritesCount,
-          this.article.favoritesCount + 1
-        );
-        try {
-          let response = await this.$store.dispatch(
-            "articles/favArticle",
-            this.article.slug
-          );
-        } catch (e) {
-          console.log(e.message);
-          throw e;
-        }
-      } else {
-        this.$set(
-          this.article,
-          this.article.favoritesCount,
-          this.article.favoritesCount - 1
-        );
-        try {
-          let response = await this.$store.dispatch(
+      if (this.$store.getters["users/user"] === null) {
+        alert("Please Sign in to save favorite.");
+        return;
+      }
+      try {
+        var resarticle;
+        if (this.article.favorited) {
+          resarticle = await this.$store.dispatch(
             "articles/unfavArticle",
             this.article.slug
           );
-        } catch (e) {
-          console.log(e.message);
-          throw e;
+        } else {
+          resarticle = await this.$store.dispatch(
+            "articles/favArticle",
+            this.article.slug
+          );
         }
+        this.$set(this.article, "favoritesCount", resarticle.favoritesCount);
+        this.$set(this.article, "favorited", resarticle.favorited);
+      } catch (e) {
+        console.log(e.message);
+        throw e;
       }
-      this.setFav === true ? (this.setFav = false) : (this.setFav = true);
     }
   }
 };

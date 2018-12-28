@@ -21,7 +21,11 @@
             Follow {{article.author.username}}
           </button>
           &nbsp;&nbsp;
-          <button class="btn btn-sm btn-outline-primary">
+          <button
+            class="btn btn-sm btn-outline-primary"
+            @click="setFavArticle"
+            :class="article.favorited ? 'active' : ''"
+          >
             <i class="ion-heart"></i>
             &nbsp;
             Favorite Post
@@ -70,7 +74,11 @@
             Follow {{article.author.username}}
           </button>
           &nbsp;
-          <button class="btn btn-sm btn-outline-primary">
+          <button
+            class="btn btn-sm btn-outline-primary"
+            @click="setFavArticle"
+            :class="article.favorited ? 'active' : ''"
+          >
             <i class="ion-heart"></i>
             &nbsp;
             Favorite Post
@@ -162,6 +170,31 @@ export default {
   methods: {
     viewTagArticleList(tagName) {
       this.$router.push({ name: "home", params: { tagName: tagName } });
+    },
+    async setFavArticle() {
+      if (this.$store.getters["users/user"] === null) {
+        alert("Please Sign in to save favorite.");
+        return;
+      }
+      try {
+        var resarticle;
+        if (this.article.favorited) {
+          resarticle = await this.$store.dispatch(
+            "articles/unfavArticle",
+            this.article.slug
+          );
+        } else {
+          resarticle = await this.$store.dispatch(
+            "articles/favArticle",
+            this.article.slug
+          );
+        }
+        this.$set(this.article, "favoritesCount", resarticle.favoritesCount);
+        this.$set(this.article, "favorited", resarticle.favorited);
+      } catch (e) {
+        console.log(e.message);
+        throw e;
+      }
     }
   }
 };
