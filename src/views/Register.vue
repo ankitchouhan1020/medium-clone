@@ -9,7 +9,7 @@
           </p>
 
           <ul class="error-messages">
-            <li v-for="error in errors" :key="error">{{error}}</li>
+            <li v-for="(value,key) in errors[0]">{{key}} {{value[0]}}</li>
           </ul>
 
           <form>
@@ -56,19 +56,19 @@ export default {
     };
   },
   methods: {
-    registerUser() {
+    async registerUser() {
       this.errors = [];
       try {
-        this.$store.dispatch("users/registerUser", {
+        await this.$store.dispatch("users/registerUser", {
           username: this.name,
           email: this.email,
           password: this.password
         });
-      } catch (err) {
-        this.errors.push(err);
-        throw err;
+      } catch (e) {
+        this.errors.push(e.response.data.errors);
+        throw e;
       }
-      this.$router.replace("/");
+      this.$router.push("/");
     }
   }
 };

@@ -10,7 +10,7 @@
           <p v-if="loading" class="text-xs-center info">Signing in...</p>
 
           <ul class="error-messages">
-            <li :key="error.message" v-for="error in errors">{{ error.message }}</li>
+            <li v-for="(value,key) in errors[0]">{{key}} {{value[0]}}</li>
           </ul>
 
           <form>
@@ -67,7 +67,7 @@ export default {
         this.loading = false;
       } catch (e) {
         this.loading = false;
-        this.errors.push(e);
+        this.errors.push(e.response.data.errors);
         throw e;
       }
     }
