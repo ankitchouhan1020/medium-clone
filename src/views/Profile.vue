@@ -105,7 +105,6 @@ export default {
       this.myArticle = await this.$store.dispatch("articles/getGlobalArticle", {
         author: name
       });
-
       this.username = this.$store.getters["users/username"];
       this.loading = false;
     } catch (e) {

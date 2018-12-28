@@ -15,10 +15,23 @@
             <a href class="author">{{article.author.username}}</a>
             <span class="date">{{formattedDate}}</span>
           </div>
-          <button class="btn btn-sm btn-outline-secondary">
+          <button
+            v-if="!(profile.following)"
+            class="btn btn-sm btn-outline-secondary"
+            @click="toFollow"
+          >
             <i class="ion-plus-round"></i>
             &nbsp;
             Follow {{article.author.username}}
+          </button>
+          <button
+            v-if="(profile.following)"
+            class="btn btn-sm btn-outline-secondary"
+            @click="toUnfollow"
+          >
+            <i class="ion-minus-round"></i>
+            &nbsp;
+            Unfollow {{article.author.username}}
           </button>
           &nbsp;&nbsp;
           <button
@@ -68,10 +81,23 @@
             <span class="date">{{formattedDate}}</span>
           </div>
 
-          <button class="btn btn-sm btn-outline-secondary">
+          <button
+            v-if="!(profile.following)"
+            class="btn btn-sm btn-outline-secondary"
+            @click="toFollow"
+          >
             <i class="ion-plus-round"></i>
             &nbsp;
             Follow {{article.author.username}}
+          </button>
+          <button
+            v-if="(profile.following)"
+            class="btn btn-sm btn-outline-secondary"
+            @click="toUnfollow"
+          >
+            <i class="ion-minus-round"></i>
+            &nbsp;
+            Unfollow {{article.author.username}}
           </button>
           &nbsp;
           <button
@@ -154,17 +180,25 @@ export default {
     );
     this.article = article;
     this.loading = false;
+    this.profile = await this.$store.dispatch(
+      "users/getProfile",
+      this.article.author.username
+    );
   },
   name: "articleView",
   data() {
     return {
       article: null,
-      loading: false
+      loading: false,
+      profile: null
     };
   },
   computed: {
     formattedDate() {
       return moment(this.article.createdAt).format("MMMM Do, YYYY");
+    },
+    user() {
+      return this.$store.getters["users/user"];
     }
   },
   methods: {
@@ -195,6 +229,22 @@ export default {
         console.log(e.message);
         throw e;
       }
+    },
+    toFollow: async function() {
+      if (this.user === null) {
+        alert("Please Sign in to follow");
+        return;
+      }
+      this.profile = await this.$store.dispatch(
+        "users/followUser",
+        this.article.author.username
+      );
+    },
+    toUnfollow: async function() {
+      this.profile = await this.$store.dispatch(
+        "users/unfollowUser",
+        this.article.author.username
+      );
     }
   }
 };
