@@ -7,7 +7,7 @@
           <p class="text-xs-center">
             <router-link to="/login">Have an account?</router-link>
           </p>
-
+          <p v-if="loading" class="text-xs-center info">{{msg}}</p>
           <ul class="error-messages">
             <li v-for="(value,key) in errors[0]" :key="key">{{key}} {{value[0]}}</li>
           </ul>
@@ -52,23 +52,33 @@ export default {
       name: "",
       email: "",
       password: "",
-      errors: []
+      errors: [],
+      loading: false,
+      msg: "Your details are getting register..."
     };
   },
   methods: {
     registerUser() {
       this.errors = [];
       try {
+        this.loading = true;
         this.$store.dispatch("users/registerUser", {
           username: this.name,
           email: this.email,
           password: this.password
         });
+
+        this.msg = "Details Registered...You are being redirect to home page..";
+        var vm = this;
+        setTimeout(function() {
+          vm.loading = false;
+          vm.$router.push("/");
+        }, 1500);
       } catch (e) {
         this.errors.push(e.response.data.errors);
+        this.loading = false;
         throw e;
       }
-      this.$router.push("/");
     }
   }
 };

@@ -56,7 +56,7 @@ export default {
           }
         });
         if (response.data.user) {
-          setToken("response.data.user.token");
+          setToken(response.data.user.token);
           commit("setUser", response.data.user);
         }
       } catch (e) {
